@@ -1,0 +1,2 @@
+For building prompts, change pre_prompt.txt and post_prompt.txt to change what should be the input for the llm before and after the user_prompt.
+The pre and post prompt are not defined in the prompt_builder.py, they are only loaded there.
