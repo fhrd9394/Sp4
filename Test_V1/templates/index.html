@@ -49,6 +49,13 @@
             font-size: 16px;
             overflow-x: auto;
         }
+        a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -62,6 +69,10 @@
     {% if output_text %}
     <h2>Generierter Code:</h2>
     <pre>{{ output_text }}</pre>
+    {% endif %}
+
+    {% if output_file_path %}
+    <p>Die Ausgabe wurde auch gespeichert. <a href="{{ output_file_path }}" download>Hier herunterladen</a></p>
     {% endif %}
 </body>
 </html>
