@@ -56,13 +56,24 @@
         a:hover {
             text-decoration: underline;
         }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            background-color: #fff;
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
     </style>
 </head>
 <body>
     <h1>Code-Generierung mit GPT-3</h1>
     <form method="POST">
         <label for="prompt">Gib deinen Prompt ein:</label>
-        <input type="text" id="prompt" name="prompt" placeholder="z.B. Schreibe Hello World in C#" required>
+        <input type="text" id="prompt" name="prompt" placeholder="z.B. Schreibe Hello World in C#">
         <button type="submit">Generieren</button>
     </form>
 
@@ -71,8 +82,24 @@
     <pre>{{ output_text }}</pre>
     {% endif %}
 
-    {% if output_file_path %}
-    <p>Die Ausgabe wurde auch gespeichert. <a href="{{ output_file_path }}" download>Hier herunterladen</a></p>
+    <h2>Suche in gespeicherten Ausgaben</h2>
+    <form method="POST">
+        <label for="search">Suchbegriff eingeben:</label>
+        <input type="text" id="search" name="search" placeholder="z.B. Hello" value="{{ search_query }}">
+        <button type="submit">Suchen</button>
+    </form>
+
+    {% if search_results %}
+    <h2>Suchergebnisse:</h2>
+    <ul>
+        {% for result in search_results %}
+        <li>{{ result }}</li>
+        {% endfor %}
+    </ul>
+    {% elif search_query %}
+    <p>Keine Ergebnisse gefunden für "{{ search_query }}".</p>
     {% endif %}
+
+    <p>Gespeicherte Datei: <a href="{{ output_file_path }}" download>Hier herunterladen</a></p>
 </body>
 </html>
