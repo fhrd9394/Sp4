@@ -40,7 +40,7 @@ def opengui(callback):
     root = Tk()
     root.title("Code Creator")
 
-    headline_label = Label(root, bg=BG_COLOR, fg=TEXT_COLOR, text="LLM Creator", font=FONT_BOLD, pady=20, width=20, height=1).grid(row=0, column=0)
+    headline_label = Label(root, bg=BG_COLOR, fg=TEXT_COLOR, text="LLM Code", font=FONT_BOLD, pady=20, width=50, height=1).grid(row=0, column=0)
  
     txt = Text(root, bg=BG_COLOR, fg=TEXT_COLOR, font=FONT, width=60)
     txt.grid(row=1, column=0, columnspan=2)
