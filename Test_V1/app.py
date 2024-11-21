@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 from transformers import pipeline
 import traceback
 import os
@@ -22,7 +22,7 @@ if not os.path.exists(output_file_path):
 
 def generate_code_from_prompt(prompt):
     """
-    Generiert Code basierend auf dem gegebenen Prompt, speichert ihn und gibt die Ausgabe zurück.
+    Generiert Code basierend auf dem gegebenen Prompt und entfernt unnötige Erklärungen.
     """
     try:
         # Generierung des Outputs mit dem Modell
@@ -30,28 +30,12 @@ def generate_code_from_prompt(prompt):
         if output and 'generated_text' in output[0]:
             raw_output = output[0]['generated_text'].strip()
 
-            # Suche nach Code-Blöcken
-            code_blocks = re.findall(r"```.*?\n(.*?)```", raw_output, re.DOTALL)
-            if code_blocks:
-                # Gefilterte Ausgabe (nur Code)
-                filtered_output = "\n\n".join(set(block.strip() for block in code_blocks))
-            else:
-                # Keine Code-Blöcke gefunden, gesamte Ausgabe verwenden
-                filtered_output = raw_output
+            # Entferne unnötige Teile der Antwort, wie Erklärungen oder Text, der nicht zum Code gehört
+            filtered_output = filter_code_from_explanations(raw_output)
 
-            # Zeige nur den gefilterten Output in der Konsole
-            print("\nGefilterter Output (für Konsole):\n")
-            print(filtered_output)
+            # Speichere die bereinigte Ausgabe in der Datei
+            save_output_to_file(prompt, filtered_output)
 
-            # Ausgabe in Datei speichern
-            try:
-                with open(output_file_path, "a", encoding="utf-8") as file:
-                    file.write(f"### Prompt: {prompt} ###\n")
-                    file.write(filtered_output + "\n\n")
-            except Exception as e:
-                print(f"Fehler beim Schreiben in die Datei: {e}")
-
-            # Rückgabe der Ausgabe
             return filtered_output
         else:
             print("Keine gültige Antwort vom Modell erhalten.")
@@ -60,6 +44,38 @@ def generate_code_from_prompt(prompt):
         error_message = f"Fehler bei der Generierung: {str(e)}\n{traceback.format_exc()}"
         print(error_message)
         return error_message
+
+
+def filter_code_from_explanations(output):
+    """
+    Entfernt erklärende Texte und konzentriert sich nur auf den Code.
+    """
+    # Suche nach Codeblöcken und entferne alles, was nicht zu einem Codeblock gehört
+    code_blocks = re.findall(r"```(.*?)```", output, re.DOTALL)
+
+    if code_blocks:
+        # Wenn Codeblöcke gefunden werden, gib diese zurück
+        return "\n\n".join(set(block.strip() for block in code_blocks))
+    else:
+        # Wenn keine Codeblöcke gefunden werden, versuche den Code direkt aus der Ausgabe zu extrahieren
+        # Entferne alle nicht-Code-Elemente (z.B. "In Python, das ...")
+        lines = output.splitlines()
+        code_lines = [line.strip() for line in lines if line.strip() and not line.startswith("#")]
+
+        return "\n".join(code_lines).strip()
+
+
+def save_output_to_file(prompt, output):
+    """
+    Speichert den generierten Code zusammen mit dem Prompt in einer Datei.
+    """
+    try:
+        with open(output_file_path, "a", encoding="utf-8") as file:
+            file.write(f"### Prompt: {prompt} ###\n")
+            file.write(output + "\n\n")
+    except Exception as e:
+        print(f"Fehler beim Schreiben in die Datei: {e}")
+
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -81,8 +97,25 @@ def index():
         output_file_path=output_file_path,
     )
 
+@app.route("/api/generate", methods=["POST"])
+def generate_code_api():
+    """
+    API-Endpunkt, um Code basierend auf einem Prompt zu generieren.
+    """
+    data = request.get_json()
+    if not data or "prompt" not in data:
+        return jsonify({"error": "Kein Prompt angegeben"}), 400
+
+    prompt = data["prompt"]
+    try:
+        generated_code = generate_code_from_prompt(prompt)
+        return jsonify({"generated_code": generated_code}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 
 if __name__ == "__main__":
+    # Flask-Server nur starten, wenn app.py direkt ausgeführt wird
     app.run(debug=True)
 
 

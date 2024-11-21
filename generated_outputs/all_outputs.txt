@@ -31,3 +31,104 @@ class Hello_World
     }
 }
 
+### Prompt: Schreibe mir ein einfaches 'Hello World' Beispiel in C#. ###
+Fehler   1   Der Compiler kann den Typ oder Namespace 'Console' nicht finden.   HelloWorld.cs    3   18  HelloWorld
+
+using System;
+
+class HelloWorld 
+{
+    static void Main(string[] args) 
+    {
+        Console.WriteLine("Hello World!");
+    }
+}
+
+### Prompt: pre schreibe Hello World in C# post ###
+using System;
+
+namespace HelloWorld
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Hello, World!");
+        }
+    }
+}
+
+### Prompt: pre schreibe Hello World in C# post ###
+#include <stdio.h>
+
+int main() 
+{
+    printf("Hello, World!"); 
+    return 0;
+}
+
+console.log("Hello, World!");
+
+puts "Hello, World!"
+
+<?php
+    echo "Hello, World!";
+?>
+
+using System;
+
+class HelloWorld 
+{
+    static void Main() 
+    {
+        Console.WriteLine("Hello, World!"); 
+    }
+}
+
+public class HelloWorld 
+{
+    public static void main(String[] args) 
+    {
+        System.out.println("Hello, World!"); 
+    }
+}
+
+print("Hello, World!")
+
+### Prompt: pre schreibe Hello World code in python post ###
+pre schreibe Hello World code in python post
+
+In Python, das einfache "Hello, World!"-Programm kann wie folgt geschrieben werden:
+```python
+# Dies ist ein Kommentar, der ignoriert wird
+# Die Funktion "print" wird verwendet, um den Text "Hello, World!" auf die Konsole auszugeben
+print("Hello, World!")
+```
+In diesem Beispiel:
+- Der Kommentar (`#`) wird verwendet, um einen Text zu hinterlegen, der während der Ausführung des Programms ignoriert wird. Kommentare werden verwendet, um den Code zu erklären und zu dokumentieren.
+- Die Funktion `print()` wird verwendet, um den Text "Hello, World!" auf die Konsole auszugeben. Der Text wird in doppelte Anführungszeichen (`"`) eingeschlossen, um ihn als String zu kennzeichnen.
+Um dieses Programm auszuführen, speichern Sie den Code in einem Dateien mit der End
+
+### Prompt: pre schreibe Hello World Code in python post ###
+# Hello World in Python
+print("Hello, World!")
+
+### Prompt: pre schreibe Hello World Cod in Java post ###
+java
+// Hello World in Java
+public class HelloWorld {
+    public static void main(String[] args) {
+        System.out.println("Hello, World!");
+    }
+}
+
+### Prompt: pre schreibe Rapid code, um roboter arm zu bewegen post ###
+rapid
+; Bewegung des Roboters
+G21 ; Einheit in mm
+G90 ; Absolute Bewegung
+G0 X0 Y0 Z0 ; Startposition
+G0 X100 Y100 Z100 ; Bewegung zum Ziel
+G0 X0 Y0 Z0 ; Zurück zur Startposition
+M30 ; Ende der Programme
+
